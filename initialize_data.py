@@ -1,9 +1,20 @@
 import pandas as pd
+import numpy as np
 
+#reads in airports and drops unneccessary columns
 airports = pd.read_csv("airports.csv")
 airports = airports.drop(['ICAO', 'Altitude', 'Timezone', 'DST', 'Timezone.1'], axis=1)
+#Gets rid of rows with garbage IATA dodes
+airports = airports.replace('\\N', np.nan)
+airports = airports.dropna()
+#reads in routes and drops unneccessary columns
 routes = pd.read_csv("routes.csv")
 routes = routes.drop(routes[routes.Stops > 0].index)
 routes = routes.drop(['Source Airport ID', 'Destination Airport ID', 'Codeshare', 'Equipment', 'Stops'], axis=1)
+#Gets ride of rows with garbage IATA codes
+routes = routes.replace('\\N', np.nan)
+routes = routes.dropna()
+
+#Samples both csvs to look at
 print(airports.sample(10))
 print(routes.sample(10))
