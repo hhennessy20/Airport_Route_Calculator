@@ -16,7 +16,6 @@ routes = pd.read_csv("routes.csv",
                             "Destination airport ID", "Codeshare",
                             "Stops", "Equipment"])
 
-#give it a list of
 def find_coords(col, lat_or_lon):
     newCol = []
     for i, row in col.iteritems():
