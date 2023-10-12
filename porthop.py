@@ -12,18 +12,12 @@ class Porthop:
         self.routes = routes
         self.start = start
         self.dest = dest
+        
 
     def successors(self, start_port):
         pos_routes = self.routes[self.routes["Source airport"] == start_port]
         return pos_routes['Destination airport']
-
-    def dest_check(self, start_port, dest_port):
-        pos_routes = self.routes[self.routes["Source airport"] == start_port]
-        end = pos_routes['Destination airport']
-        for i, row in end.iteritems():
-            if row == dest_port:
-                return True
-        return False
+        
 
     def heuristic(self, src):
         scr_routes = self.routes[self.routes["Source airport"] == src]
@@ -62,6 +56,7 @@ class Porthop:
         return acos(sin(start_lat) * sin(end_lat) + cos(start_lat) *
                     cos(end_lat) * cos(end_lon - start_lon)) * 3958.756
 
+    
     def goal_test(self, test_port):
         return test_port == self.dest[0]
 
@@ -110,7 +105,6 @@ def start():
     port_search = Porthop(airports, routes, src, dest)
 
     #print(port_search.successors(start_port))
-    #print(port_search.dest_check(start_port, dest_port))
     #print(port_search.heuristic(start_port))
     #print(port_search.cost("BTV", "ATL"))
 
@@ -128,7 +122,6 @@ def start():
     route = astar(start_port, port_search.goal_test, port_search.successors,
                   port_search.heuristic, port_search.cost)
     path = airport_to_path(route)
-
 
     lats = []
     lons = []
