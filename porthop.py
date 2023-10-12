@@ -20,37 +20,39 @@ class Porthop:
         
 
     def heuristic(self, src):
-        scr_routes = self.routes[self.routes["Source airport"] == src]
-        scr_routes = scr_routes["Source airport"]
+        src_row = (airports[airports['IATA'] == src])
+        end_row = (airports[airports['IATA'] == self.dest])
+        if src_row.empty or end_row.empty:
+            # print("Heuristic")
+            # print(src)
+            # print(src_row, end_row)
+            print("Found empty data frame")
+        start_lat = src_row["Latitude"].iloc[0]
+        start_lon = src_row["Longitude"].iloc[0]
+        end_lat = end_row["Latitude"].iloc[0]
+        end_lon = end_row["Longitude"].iloc[0]
 
-        start_lat = find_coords(scr_routes, "Latitude")
-        start_lon = find_coords(scr_routes, "Longitude")
-        end_lat = find_coords(self.dest, "Latitude")
-        end_lon = find_coords(self.dest, "Longitude")
-
-        start_lat, start_lon, end_lat, end_lon = float(start_lat[0]), \
-            float(start_lon[0]), float(end_lat[0]), float(end_lon[0])
+        start_lat, start_lon, end_lat, end_lon = float(start_lat), \
+            float(start_lon), float(end_lat), float(end_lon)
         start_lat, start_lon, end_lat, end_lon = \
             map(radians, [start_lat, start_lon, end_lat, end_lon])
         return acos(sin(start_lat) * sin(end_lat) + cos(start_lat) *
                     cos(end_lat) * cos(end_lon - start_lon)) * 3958.756
 
     def cost(self, src, end):
-        # Theres gotta be a more efficient way to do this
-        # the IATA IDs are passed as args, so can you just lookup the
-        # corresponding lat/longs?
-        src_routes = self.routes[self.routes["Source airport"] == src]
-        end_routes = self.routes[self.routes["Source airport"] == end]
-        src_routes = src_routes["Source airport"]
-        end_routes = end_routes["Source airport"]
+        src_row = (airports[airports['IATA'] == src])
+        end_row = (airports[airports['IATA'] == end])
+        if src_row.empty or end_row.empty:
+            # print("src: " + src, "end: " + end)
+            # print("src_row: ", src_row, "end_row: ", end_row)
+            print("Found empty data frame")
+        start_lat = src_row["Latitude"].iloc[0]
+        start_lon = src_row["Longitude"].iloc[0]
+        end_lat = end_row["Latitude"].iloc[0]
+        end_lon = end_row["Longitude"].iloc[0]
 
-        start_lat = find_coords(src_routes, "Latitude")
-        start_lon = find_coords(src_routes, "Longitude")
-        end_lat = find_coords(end_routes, "Latitude")
-        end_lon = find_coords(end_routes, "Longitude")
-
-        start_lat, start_lon, end_lat, end_lon = float(start_lat[0]), \
-            float(start_lon[0]), float(end_lat[0]), float(end_lon[0])
+        start_lat, start_lon, end_lat, end_lon = float(start_lat), \
+            float(start_lon), float(end_lat), float(end_lon)
         start_lat, start_lon, end_lat, end_lon = \
             map(radians, [start_lat, start_lon, end_lat, end_lon])
         return acos(sin(start_lat) * sin(end_lat) + cos(start_lat) *
@@ -58,7 +60,7 @@ class Porthop:
 
     
     def goal_test(self, test_port):
-        return test_port == self.dest[0]
+        return test_port == self.dest
 
 
 # stores the contents of the csv files into these vars
@@ -102,7 +104,7 @@ def start():
     dest = dest_grab['Source airport']
 
 
-    port_search = Porthop(airports, routes, src, dest)
+    port_search = Porthop(airports, routes, src, dest_port)
 
     #print(port_search.successors(start_port))
     #print(port_search.heuristic(start_port))
