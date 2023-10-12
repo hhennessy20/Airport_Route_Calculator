@@ -1,7 +1,11 @@
 from heapq import heappush, heappop
 from typing import Generic, TypeVar
 
+from initialize_data import initialize_data
+
 T = TypeVar('T')
+
+airports, routes = initialize_data()
 
 class Airport:
     def __init__(self, port, parent, cost, heuristic):
@@ -45,6 +49,8 @@ def astar(initial, goal_test, successors, heuristic, cost):
             return current_port
 
         for child in successors(port_id):
+            if not (airports['IATA'] == child).any():
+                continue
             new_cost = current_port.cost + cost(port_id, child)
             if child in explored:
                 continue

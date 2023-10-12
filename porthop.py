@@ -93,18 +93,14 @@ def find_coords(col, lat_or_lon):
 def start():
     # Rewrite for user input
     start_port = "BTV"
-    dest_port = "SYD"
+    dest_port = "LNZ"
 
     # finds all outgoing routes from starting airport
     pos_routes = routes[routes["Source Airport"] == start_port]
-    dest_grab = routes[routes["Source Airport"] == dest_port]
 
     # gives you the source and end airport IATA ID
     # src and end are for point A-B routes, dest is info for the goal destination
     src = pos_routes['Source Airport']
-    end = pos_routes['Destination Airport']
-    dest = dest_grab['Source Airport']
-
 
     port_search = Porthop(airports, routes, src, dest_port)
 
@@ -121,8 +117,6 @@ def start():
     fig, ax = plt.subplots(figsize=(20, 15))
     plt.title("Airports Around the World")
 
-    #print(longitudes)
-
     route = astar(start_port, port_search.goal_test, port_search.successors,
                   port_search.heuristic, port_search.cost)
     path = airport_to_path(route)
@@ -135,9 +129,6 @@ def start():
         lon = cols["Longitude"].iloc[0]
         lats.append(lat)
         lons.append(lon)
-
-    print(lats)
-    print(lons)
 
     plt.scatter(longitudes, latitudes, s=1)
     plt.plot(lons, lats, color = "orange")
