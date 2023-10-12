@@ -1,6 +1,7 @@
 # Import wxPython library
 import wx
 import initialize_data
+import porthop
 
 airports, routes = initialize_data.initialize_data()
 locations = sorted(airports['IATA'].tolist())
@@ -101,14 +102,24 @@ class Flight_Frame(wx.Frame):
         self.output_label.SetForegroundColour(wx.Colour(255, 255, 255))
         hbox4.Add(self.output_label, 1, wx.ALIGN_CENTER_VERTICAL)
 
-
-
-
     # Event handler for encrypt button
     def click_find_button_wx(self, event):
-        self.output_label.SetLabel("Finding Route...")
-        self.Layout()
-        return
+        start_port = self.source_selector.GetValue()
+        dest_port = self.dest_selector.GetValue()
+
+        if start_port and dest_port:
+            self.output_label.SetLabel("Finding Route...")
+            self.Layout()
+
+            # Call the route-finding code with user-input source and destination airports
+            route = find_route(start_port, dest_port)
+
+            if route is not None:
+                self.output_label.SetLabel("Route: " + " -> ".join(route))
+            else:
+                self.output_label.SetLabel("No route found.")
+        else:
+            self.output_label.SetLabel("Please enter source and destination airports.")
 
     # Event handler for source box, may be unneccessary
     def enter_source_box(self, event):
@@ -118,6 +129,14 @@ class Flight_Frame(wx.Frame):
     def enter_dest_box(self, event):
         return
 
+def find_route(start_port, dest_port):
+    # Call the A* search to get the result (which is a list of airport codes)
+    route = porthop.start(start_port, dest_port)
+
+    if route is not None:
+        return route  # The route is already a list of airport codes
+    else:
+        return None
 
 # Creates and starts application Object
 front_end = wx.App()

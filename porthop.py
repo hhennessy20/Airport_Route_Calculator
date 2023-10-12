@@ -90,10 +90,7 @@ def find_coords(col, lat_or_lon):
 
 # generic function that just holds important code to get basic things working
 # this code should and probably will be moved to other functions later on
-def start():
-    # Rewrite for user input
-    start_port = "BTV"
-    dest_port = "LNZ"
+def start(start_port, dest_port):
 
     # finds all outgoing routes from starting airport
     pos_routes = routes[routes["Source Airport"] == start_port]
@@ -133,7 +130,8 @@ def start():
     plt.scatter(longitudes, latitudes, s=1)
     plt.plot(lons, lats, color = "orange")
     plt.show()
+    return path
 
 
 if __name__ == "__main__":
-    start()
+    start("BTV", "LNZ")
