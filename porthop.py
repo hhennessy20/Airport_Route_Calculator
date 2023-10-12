@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 import pandas as pd
 from math import sin, cos, acos, radians
-from algo import astar
+from algo import astar, airport_to_path
 
 
 class Porthop:
@@ -67,12 +67,13 @@ class Porthop:
 
 
 # stores the contents of the csv files into these vars
-airports = pd.read_csv("airports.csv",
-                       names=["Name", "City", "Country", "IATA", "ICAO",
-                              "Latitude", "Longitude", "Altitude", "Timezone",
-                              "DST", "Timezone"])
+airports = pd.read_csv("airports_old.csv",
+                names=["ID", "Name", "City", "Country", "IATA", "ICAO",
+                "Latitude", "Longitude", "Altitude", "Timezone", "DST",
+                "Tz",  "Type", "Source"])
 routes = pd.read_csv("routes.csv",
-                     names=["Airline ID", "Source airport",
+                     names=["Airline"
+                            "Airline ID", "Source airport",
                             "Source airport ID",
                             "Destination airport",
                             "Destination airport ID", "Codeshare",
@@ -93,7 +94,7 @@ def find_coords(col, lat_or_lon):
 def start():
     # Rewrite for user input
     start_port = "BTV"
-    dest_port = "ATL"
+    dest_port = "JFK"
 
     # finds all outgoing routes from starting airport
     pos_routes = routes[routes["Source airport"] == start_port]
@@ -104,33 +105,46 @@ def start():
     src = pos_routes['Source airport']
     end = pos_routes['Destination airport']
     dest = dest_grab['Source airport']
-    #print([i for i in end])
 
-    lat = find_coords(src, "Latitude"), find_coords(end, "Latitude")
-    lon = find_coords(src, "Longitude"), find_coords(end, "Longitude")
-
-    # [0] gives you the source coords, [1] is end coords
-    # becasue of how this works it will print the source coord for however many
-    # routes there are so theres a lot of duplication, can be ignored with lat/lon[0][0]
-    #print(lat[1])
-    #print(lon[1])
-
-    # coords of the final destination for the heuristic measurments
-    end_lat = find_coords(dest, "Latitude")
-    end_lon = find_coords(dest, "Longitude")
-
-    #print(end_lat[0])
-    #print(end_lon[0])
 
     port_search = Porthop(airports, routes, src, dest)
 
     #print(port_search.successors(start_port))
     #print(port_search.dest_check(start_port, dest_port))
-    #print(port_search.heuristic(src))
+    #print(port_search.heuristic(start_port))
     #print(port_search.cost("BTV", "ATL"))
-    print(astar(start_port, port_search.goal_test, port_search.successors,
-                port_search.heuristic, port_search.cost))
-    #print(port_search.successors("BTV"))
+
+    longitudes = airports["Longitude"].tolist()
+    latitudes = airports["Latitude"].tolist()
+
+    latitudes.pop(0)
+    longitudes.pop(0)
+
+    fig, ax = plt.subplots(figsize=(20, 15))
+    plt.title("Airports Around the World")
+
+    #print(longitudes)
+
+    route = astar(start_port, port_search.goal_test, port_search.successors,
+                  port_search.heuristic, port_search.cost)
+    path = airport_to_path(route)
+
+
+    lats = []
+    lons = []
+    for stop in path:
+        cols = (airports[airports['IATA'] == stop])
+        lat = cols["Latitude"].iloc[0]
+        lon = cols["Longitude"].iloc[0]
+        lats.append(lat)
+        lons.append(lon)
+
+    print(lats)
+    print(lons)
+
+    plt.scatter(longitudes, latitudes, s=1)
+    plt.plot(lons, lats, color = "orange")
+    plt.show()
 
 
 if __name__ == "__main__":
