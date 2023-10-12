@@ -4,6 +4,7 @@ from mpl_toolkits.basemap import Basemap
 import pandas as pd
 from math import sin, cos, acos, radians
 from algo import astar, airport_to_path
+from initialize_data import initialize_data
 
 
 class Porthop:
@@ -15,17 +16,17 @@ class Porthop:
         
 
     def successors(self, start_port):
-        pos_routes = self.routes[self.routes["Source airport"] == start_port]
-        return pos_routes['Destination airport']
+        pos_routes = self.routes[self.routes["Source Airport"] == start_port]
+        return pos_routes['Destination Airport']
         
 
     def heuristic(self, src):
         src_row = (airports[airports['IATA'] == src])
         end_row = (airports[airports['IATA'] == self.dest])
         if src_row.empty or end_row.empty:
-            # print("Heuristic")
-            # print(src)
-            # print(src_row, end_row)
+            print("Heuristic")
+            print(src)
+            print(src_row, end_row)
             print("Found empty data frame")
         start_lat = src_row["Latitude"].iloc[0]
         start_lon = src_row["Longitude"].iloc[0]
@@ -43,8 +44,8 @@ class Porthop:
         src_row = (airports[airports['IATA'] == src])
         end_row = (airports[airports['IATA'] == end])
         if src_row.empty or end_row.empty:
-            # print("src: " + src, "end: " + end)
-            # print("src_row: ", src_row, "end_row: ", end_row)
+            print("src: " + src, "end: " + end)
+            print("src_row: ", src_row, "end_row: ", end_row)
             print("Found empty data frame")
         start_lat = src_row["Latitude"].iloc[0]
         start_lon = src_row["Longitude"].iloc[0]
@@ -64,17 +65,18 @@ class Porthop:
 
 
 # stores the contents of the csv files into these vars
-airports = pd.read_csv("airports_old.csv",
-                names=["ID", "Name", "City", "Country", "IATA", "ICAO",
-                "Latitude", "Longitude", "Altitude", "Timezone", "DST",
-                "Tz",  "Type", "Source"])
-routes = pd.read_csv("routes.csv",
-                     names=["Airline"
-                            "Airline ID", "Source airport",
-                            "Source airport ID",
-                            "Destination airport",
-                            "Destination airport ID", "Codeshare",
-                            "Stops", "Equipment"])
+# airports = pd.read_csv("airports_old.csv",
+#                 names=["ID", "Name", "City", "Country", "IATA", "ICAO",
+#                 "Latitude", "Longitude", "Altitude", "Timezone", "DST",
+#                 "Tz",  "Type", "Source"])
+# routes = pd.read_csv("routes.csv",
+#                      names=["Airline"
+#                             "Airline ID", "Source airport",
+#                             "Source airport ID",
+#                             "Destination airport",
+#                             "Destination airport ID", "Codeshare",
+#                             "Stops", "Equipment"])
+airports, routes = initialize_data()
 
 
 def find_coords(col, lat_or_lon):
@@ -91,17 +93,17 @@ def find_coords(col, lat_or_lon):
 def start():
     # Rewrite for user input
     start_port = "BTV"
-    dest_port = "JFK"
+    dest_port = "SYD"
 
     # finds all outgoing routes from starting airport
-    pos_routes = routes[routes["Source airport"] == start_port]
-    dest_grab = routes[routes["Source airport"] == dest_port]
+    pos_routes = routes[routes["Source Airport"] == start_port]
+    dest_grab = routes[routes["Source Airport"] == dest_port]
 
     # gives you the source and end airport IATA ID
     # src and end are for point A-B routes, dest is info for the goal destination
-    src = pos_routes['Source airport']
-    end = pos_routes['Destination airport']
-    dest = dest_grab['Source airport']
+    src = pos_routes['Source Airport']
+    end = pos_routes['Destination Airport']
+    dest = dest_grab['Source Airport']
 
 
     port_search = Porthop(airports, routes, src, dest_port)
