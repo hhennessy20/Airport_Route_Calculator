@@ -64,18 +64,6 @@ class Porthop:
         return test_port == self.dest
 
 
-# stores the contents of the csv files into these vars
-# airports = pd.read_csv("airports_old.csv",
-#                 names=["ID", "Name", "City", "Country", "IATA", "ICAO",
-#                 "Latitude", "Longitude", "Altitude", "Timezone", "DST",
-#                 "Tz",  "Type", "Source"])
-# routes = pd.read_csv("routes.csv",
-#                      names=["Airline"
-#                             "Airline ID", "Source airport",
-#                             "Source airport ID",
-#                             "Destination airport",
-#                             "Destination airport ID", "Codeshare",
-#                             "Stops", "Equipment"])
 airports, routes = initialize_data()
 
 
@@ -101,10 +89,6 @@ def start(start_port, dest_port):
 
     port_search = Porthop(airports, routes, src, dest_port)
 
-    #print(port_search.successors(start_port))
-    #print(port_search.heuristic(start_port))
-    #print(port_search.cost("BTV", "ATL"))
-
     longitudes = airports["Longitude"].tolist()
     latitudes = airports["Latitude"].tolist()
 
@@ -128,7 +112,7 @@ def start(start_port, dest_port):
         lons.append(lon)
 
     plt.scatter(longitudes, latitudes, s=1)
-    plt.plot(lons, lats, color = "orange")
+    plt.plot(lons, lats, color = "orange", marker='o')
     plt.show()
     return path
 
