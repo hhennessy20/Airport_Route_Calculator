@@ -9,64 +9,62 @@ from initialize_data import initialize_data
 
 class Porthop:
     def __init__(self, airports, routes, start, dest):
-        self.airports = airports
-        self.routes = routes
-        self.start = start
-        self.dest = dest
-        
+        self.airports = airports    # DataFrame containing all airport data
+        self.routes = routes        # DataFrame containing all route data
+        self.start = start          # Start airport IATA
+        self.dest = dest            # Destination airport IATA
 
+    # Returns a list of all outgoing routes from airport passed as arg
     def successors(self, start_port):
         pos_routes = self.routes[self.routes["Source Airport"] == start_port]
         return pos_routes['Destination Airport']
         
-
+    # Finds the euclidean distance between airport passed as arg and
+    # destination airport using coordinates
     def heuristic(self, src):
+        # Get rows containing desired airports
         src_row = (airports[airports['IATA'] == src])
         end_row = (airports[airports['IATA'] == self.dest])
-        if src_row.empty or end_row.empty:
-            print("Heuristic")
-            print(src)
-            print(src_row, end_row)
-            print("Found empty data frame")
+
+        # Get coords of each airport
         start_lat = src_row["Latitude"].iloc[0]
         start_lon = src_row["Longitude"].iloc[0]
         end_lat = end_row["Latitude"].iloc[0]
         end_lon = end_row["Longitude"].iloc[0]
 
-        start_lat, start_lon, end_lat, end_lon = float(start_lat), \
-            float(start_lon), float(end_lat), float(end_lon)
+        # Calculate Euclidean distance using Spherical Law of Cosines formula
         start_lat, start_lon, end_lat, end_lon = \
             map(radians, [start_lat, start_lon, end_lat, end_lon])
         return acos(sin(start_lat) * sin(end_lat) + cos(start_lat) *
                     cos(end_lat) * cos(end_lon - start_lon)) * 3958.756
 
     def cost(self, src, end):
+        # Get rows containing desired airports
         src_row = (airports[airports['IATA'] == src])
         end_row = (airports[airports['IATA'] == end])
-        if src_row.empty or end_row.empty:
-            print("src: " + src, "end: " + end)
-            print("src_row: ", src_row, "end_row: ", end_row)
-            print("Found empty data frame")
+
+        # Get coords of each airport
         start_lat = src_row["Latitude"].iloc[0]
         start_lon = src_row["Longitude"].iloc[0]
         end_lat = end_row["Latitude"].iloc[0]
         end_lon = end_row["Longitude"].iloc[0]
 
-        start_lat, start_lon, end_lat, end_lon = float(start_lat), \
-            float(start_lon), float(end_lat), float(end_lon)
+        # Calculate Euclidean distance using Spherical Law of Cosines formula
         start_lat, start_lon, end_lat, end_lon = \
             map(radians, [start_lat, start_lon, end_lat, end_lon])
         return acos(sin(start_lat) * sin(end_lat) + cos(start_lat) *
                     cos(end_lat) * cos(end_lon - start_lon)) * 3958.756
 
-    
+    # Check if airport passed as arg is the destination
     def goal_test(self, test_port):
         return test_port == self.dest
 
 
+# Get DataFrames from cleaned csv files
 airports, routes = initialize_data()
 
 
+# Finds coords for entire DataFrame (unused)
 def find_coords(col, lat_or_lon):
     new_col = []
     for i, row in col.iteritems():
@@ -76,8 +74,8 @@ def find_coords(col, lat_or_lon):
     return new_col
 
 
-# generic function that just holds important code to get basic things working
-# this code should and probably will be moved to other functions later on
+# Establishes necessary data from dataset, plots airports on globe,
+# and calls astar
 def start(start_port, dest_port):
 
     # finds all outgoing routes from starting airport
