@@ -19,3 +19,6 @@ The project is a Python based AI utilizing A* to plot different routes that can 
 - https://github.com/davecom/ClassicComputerScienceProblemsInPython/blob/master/Chapter2/generic_search.py
 - https://openflights.org/data.html
 - https://www.kaggle.com/datasets/elmoallistair/airlines-airport-and-routes/
+- https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html#env-requirements
+- https://anaconda.org/anaconda/basemap
+- https://openflights.org/data.html
