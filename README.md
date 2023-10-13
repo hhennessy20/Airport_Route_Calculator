@@ -9,3 +9,9 @@ The project is a Python based AI utilizing A* to plot different routes that can 
 4. Run the frontend_wx.py file in Pycharm. 
 5. The GUI should then open and allow the user to enter or select the desired start and end airports.
 6. Rather than running frontend_wx.py, you can also run a test by running the main function in porthop.py, which uses the two airports BTV and LNZ (these can be changed in the main function).
+
+## Sources & References
+- https://lgoeller.github.io/2018/02/13/visualizing-flight-data-with-basemap.html
+- https://github.com/davecom/ClassicComputerScienceProblemsInPython/blob/master/Chapter2/generic_search.py
+- https://openflights.org/data.html
+- https://www.kaggle.com/datasets/elmoallistair/airlines-airport-and-routes/
