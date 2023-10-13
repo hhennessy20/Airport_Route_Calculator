@@ -8,3 +8,4 @@ The code for MiniMax is provided from Chapter 8. You can also use the example of
 3. Click Install Dependencies, which should automatically install pandas, matplotlib, etc. If not, these may need to manually be selected in the Anaconda Navigator.
 4. Run the frontend_wx.py file in Pycharm. 
 5. The GUI should then open and allow the user to enter or select the desired start and end airports.
+6. Rather than running frontend_wx.py, you can also run a test by running the main function in porthop.py, which uses the two airports BTV and LNZ.
