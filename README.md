@@ -1,6 +1,6 @@
 # 480AirportProject
 
-The code for MiniMax is provided from Chapter 8. You can also use the example of Tic Tac Toe from that chapter as a strong starting point. You will need to implement a special subclass of Board that implements the numerical variant. You can play against the AI by running python3 ntictactoe_ai.py or run the unit tests as usual in test_ntictactoe.py.
+The project is a Python based AI utilizing A* to plot different routes that can be taken between airports on a map diagram.
 
 ## Setup
 1. Install Anaconda (https://www.anaconda.com/download) and miniconda (https://docs.conda.io/projects/miniconda/en/latest/)
