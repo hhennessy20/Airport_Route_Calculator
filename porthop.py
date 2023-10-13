@@ -1,7 +1,4 @@
-import os
 import matplotlib.pyplot as plt
-from mpl_toolkits.basemap import Basemap
-import pandas as pd
 from math import sin, cos, acos, radians
 from algo import astar, airport_to_path
 from initialize_data import initialize_data
