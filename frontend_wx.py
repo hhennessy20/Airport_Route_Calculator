@@ -51,7 +51,6 @@ class Flight_Frame(wx.Frame):
 
         # Source entry box
         self.source_selector = wx.ComboBox(main_panel, value="", choices=locations, style=wx.TE_PROCESS_ENTER)
-        #self.source_selector.Bind(wx.TE_PROCESS_ENTER, self.enter_source_box)
         self.source_selector.SetFont(font)
         self.source_selector.SetForegroundColour(wx.Colour(255, 255, 255))
         self.source_selector.SetBackgroundColour(wx.Colour(0, 0, 0))
@@ -100,9 +99,9 @@ class Flight_Frame(wx.Frame):
         self.output_label = wx.StaticText(main_panel, label="Awaiting Route...")
         self.output_label.SetFont(font)
         self.output_label.SetForegroundColour(wx.Colour(255, 255, 255))
-        hbox4.Add(self.output_label, 1, wx.ALIGN_CENTER_VERTICAL)
+        hbox4.Add(self.output_label, 1, wx.ALIGN_LEFT)
 
-    # Event handler for encrypt button
+    # Event handler for find button
     def click_find_button_wx(self, event):
         start_port = self.source_selector.GetValue()
         dest_port = self.dest_selector.GetValue()
@@ -112,31 +111,19 @@ class Flight_Frame(wx.Frame):
             self.Layout()
 
             # Call the route-finding code with user-input source and destination airports
-            route = find_route(start_port, dest_port)
+            route = porthop.port_search(start_port, dest_port)
+            full_names = porthop.list_full_names(route)
 
             if route is not None:
-                self.output_label.SetLabel("Route: " + " -> ".join(route))
+                self.output_label.SetLabel("Route: " + " -> ".join(full_names))
+                self.output_label.Wrap(400)
+                porthop.plot_path(route)
             else:
                 self.output_label.SetLabel("No route found.")
         else:
             self.output_label.SetLabel("Please enter source and destination airports.")
 
-    # Event handler for source box, may be unneccessary
-    def enter_source_box(self, event):
-        return
 
-    # Event handler for dest box, may be unneccessary
-    def enter_dest_box(self, event):
-        return
-
-def find_route(start_port, dest_port):
-    # Call the A* search to get the result (which is a list of airport codes)
-    route = porthop.start(start_port, dest_port)
-
-    if route is not None:
-        return route  # The route is already a list of airport codes
-    else:
-        return None
 
 # Creates and starts application Object
 front_end = wx.App()
