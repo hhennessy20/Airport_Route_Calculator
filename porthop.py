@@ -166,6 +166,6 @@ def list_full_names(path):
 #     plt.show()
 #     return path
 #
-#
-# if __name__ == "__main__":
-#     start("BTV", "LNZ")
+
+if __name__ == "__main__":
+    plot_path(port_search("BTV", "LNZ"))
